@@ -15,8 +15,12 @@ class resultsViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var quoteLabel: UILabel!
     
-    var string1 = ""
     var string2 = ""
+    var quotes:Array<quote> = []
+    
+    //Empty String author array
+    //arrayArray contains all non-duplicate author names 
+    var authorArray = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,23 +28,41 @@ class resultsViewController: UIViewController {
         
         scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: quoteLabel.bottomAnchor).isActive = true
 
-        
         quoteLabel.text = string2
-        //resultQuoteBox1.text = string2
+        
+        
+        print("From resultsViewController: \n")
+        for Quotes in self.quotes {
+            //print("\(quotes.quoteAuthor)\n")
+            //Go through all API entries. If author does not exist in authorArray, append it. Do not repeat author names.
+             if self.authorArray.contains(Quotes.quoteAuthor){
+                 continue
+             } else {
+                 self.authorArray.append(Quotes.quoteAuthor)
+             }
+        }
+        
 
-        // Do any additional setup after loading the view.
+    }
+    
+    @IBAction func filterButton(_ sender: Any) {
+        performSegue(withIdentifier: "filterSegue", sender: self)
+        
     }
     
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if(segue.identifier == "filterSegue"){
+            let vc = segue.destination as! filterViewController
+            vc.authorArray = self.authorArray
+            vc.quotes = self.quotes //Pass API calls to quotes in filterViewController.swift
+
+        }
+        
     }
-    */
+    
+    
+
 
 }
+

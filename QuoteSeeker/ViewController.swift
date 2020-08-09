@@ -34,8 +34,7 @@ class ViewController: UIViewController {
     let group = DispatchGroup()
     
     var authorAndGenreInputted = false
-    
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -52,9 +51,20 @@ class ViewController: UIViewController {
             print ("Status code: \(self.statusCode)")
             print ("Total pages: \(self.totalPages)")
             print ("Current page: \(self.currentPage)")
-            for Quotes in self.quotes{
-                print("\(Quotes)\n")
-            }
+            
+            
+            
+            //DEBUG PURPOSES
+//            for Quotes in self.quotes{
+//                print("\(Quotes)\n") //This prints out the quotes and just the quotes
+//
+//                //Go through all API entries. If author does not exist in authorArray, append it. Do not repeat author names.
+//                if self.authorArray.contains(Quotes.quoteAuthor){
+//                    continue
+//                } else {
+//                    self.authorArray.append(Quotes.quoteAuthor)
+//                }
+//            }
         }
         
         self.group.wait() //Extremely important, need to wait for API to finish or else it will crash
@@ -66,7 +76,9 @@ class ViewController: UIViewController {
 
         if(segue.identifier == "searchSegue"){
             let vc = segue.destination as! resultsViewController
-            vc.string1 = self.authorName as String
+
+            vc.quotes = self.quotes
+            
             
             if(authorAndGenreInputted){
                 //We must santize the quotes based on the user's genre
@@ -139,7 +151,7 @@ class ViewController: UIViewController {
             //Stores JSON results into global variables
             self.statusCode = json.statusCode
             self.totalPages = json.totalPages
-            self.currentPage = json.currentPage
+            //self.currentPage = json.currentPage
             self.quotes = json.quotes //json.quotes from struct Response "quotes"
             
             self.group.leave()
@@ -156,8 +168,9 @@ class ViewController: UIViewController {
 // For API calling, structure of JSON file
 struct Response: Codable{
     let statusCode: Int
+    let message: String
     let totalPages: Int
-    let currentPage: Int
+    //let currentPage: Int
     let quotes: [quote]
 
 }
